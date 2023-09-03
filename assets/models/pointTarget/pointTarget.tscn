@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://ce2pxmq44x6ub"]
+
+[ext_resource type="PackedScene" uid="uid://ck6afvvv2qbe4" path="res://assets/models/pointTarget/pointTarget.glb" id="1_gx1kb"]
+[ext_resource type="Script" path="res://assets/models/pointTarget/pointTarget.gd" id="2_hy8yw"]
+
+[sub_resource type="Animation" id="Animation_t3tws"]
+resource_name = "opacity"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pointer/Skeleton3D/Circle:transparency")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_qwqhh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pointer/Skeleton3D/Circle:transparency")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ejkiy"]
+_data = {
+"RESET": SubResource("Animation_qwqhh"),
+"opacity": SubResource("Animation_t3tws")
+}
+
+[node name="pointTarget" instance=ExtResource("1_gx1kb")]
+script = ExtResource("2_hy8yw")
+
+[node name="AnimationPlayerOpacity" type="AnimationPlayer" parent="." index="2"]
+libraries = {
+"": SubResource("AnimationLibrary_ejkiy")
+}

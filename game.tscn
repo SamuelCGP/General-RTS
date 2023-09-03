@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://cm0ltfwrpi7c6"]
+
+[ext_resource type="PackedScene" uid="uid://cyxyltwrd3qn1" path="res://scenes/unit.tscn" id="1_1n0q4"]
+[ext_resource type="Script" path="res://game.gd" id="1_mtsq0"]
+[ext_resource type="PackedScene" uid="uid://p4u85fgasw0s" path="res://maps/superflat.tscn" id="2_18wt7"]
+[ext_resource type="Script" path="res://scripts/selector.gd" id="2_voqe4"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kh4w5"]
+blend_mode = 3
+light_mode = 1
+
+[node name="game" type="Node3D"]
+script = ExtResource("1_mtsq0")
+
+[node name="Selector" type="ColorRect" parent="."]
+material = SubResource("CanvasItemMaterial_kh4w5")
+mouse_filter = 1
+color = Color(0.490196, 0.796078, 1, 1)
+script = ExtResource("2_voqe4")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, 0.541675, -0.45452, 0, 0.642788, 0.766044, 0.707107, -0.541675, 0.45452, -37.83, 65.341, 38.045)
+current = true
+fov = 16.0
+size = 5.0
+near = 60.0
+
+[node name="unit" parent="." instance=ExtResource("1_1n0q4")]
+
+[node name="unit2" parent="." instance=ExtResource("1_1n0q4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.70095, 0, 0)
+
+[node name="unit3" parent="." instance=ExtResource("1_1n0q4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.77772)
+
+[node name="unit4" parent="." instance=ExtResource("1_1n0q4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.03014, 0, 0)
+
+[node name="Superflat" parent="." instance=ExtResource("2_18wt7")]

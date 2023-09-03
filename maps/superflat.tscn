@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=3 uid="uid://p4u85fgasw0s"]
+
+[ext_resource type="Texture2D" uid="uid://dkxhwgi1csuw6" path="res://addons/kenney_prototype_textures/green/texture_01.png" id="1_yjk7y"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wgarn"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_1g8ux"]
+sky_material = SubResource("ProceduralSkyMaterial_wgarn")
+
+[sub_resource type="Environment" id="Environment_8pebe"]
+background_mode = 2
+sky = SubResource("Sky_1g8ux")
+tonemap_mode = 2
+glow_enabled = true
+fog_light_color = Color(0.517647, 0.552941, 0.607843, 1)
+volumetric_fog_density = 0.03
+volumetric_fog_albedo = Color(0.388235, 0.584314, 1, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ksoxq"]
+size = Vector2(64, 64)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_80qhp"]
+albedo_color = Color(0.489622, 0.489622, 0.489622, 1)
+albedo_texture = ExtResource("1_yjk7y")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a7ojc"]
+size = Vector3(64, 1, 64)
+
+[node name="Superflat" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+light_color = Color(1, 0.905882, 0.631373, 1)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8pebe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_ksoxq")
+surface_material_override/0 = SubResource("StandardMaterial3D_80qhp")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_a7ojc")
