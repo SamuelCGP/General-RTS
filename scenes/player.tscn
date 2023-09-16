@@ -1,0 +1,80 @@
+[gd_scene load_steps=8 format=3 uid="uid://d2gldf2mi4331"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_tdycx"]
+[ext_resource type="Script" path="res://scripts/selector.gd" id="2_kgsml"]
+[ext_resource type="Script" path="res://scripts/player_camera.gd" id="3_5r5pm"]
+[ext_resource type="Script" path="res://scripts/ControlPanel.gd" id="4_odtdl"]
+[ext_resource type="Texture2D" uid="uid://u311k50aob8d" path="res://assets/textures/map_placeholder.png" id="5_tudrw"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kh4w5"]
+blend_mode = 3
+light_mode = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7alcy"]
+size = Vector2(766, 168)
+
+[node name="Player" type="Node3D"]
+script = ExtResource("1_tdycx")
+
+[node name="Selector" type="ColorRect" parent="."]
+material = SubResource("CanvasItemMaterial_kh4w5")
+mouse_filter = 1
+color = Color(0.490196, 0.796078, 1, 1)
+script = ExtResource("2_kgsml")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, 0.541675, -0.45452, 0, 0.642788, 0.766044, 0.707107, -0.541675, 0.45452, -37.83, 65.341, 38.045)
+fov = 16.0
+size = 5.0
+near = 60.0
+script = ExtResource("3_5r5pm")
+
+[node name="UI" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ControlPanel" type="PanelContainer" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -383.0
+offset_top = -168.0
+offset_right = 383.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+script = ExtResource("4_odtdl")
+
+[node name="Area2D" type="Area2D" parent="UI/ControlPanel"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UI/ControlPanel/Area2D"]
+position = Vector2(383, 84)
+shape = SubResource("RectangleShape2D_7alcy")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ControlPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ControlPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Map" type="TextureRect" parent="UI/ControlPanel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture = ExtResource("5_tudrw")
+
+[node name="UnitContainer" type="GridContainer" parent="UI/ControlPanel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(396, 111)
+layout_mode = 2
+columns = 10
+
+[node name="ActionContainer" type="GridContainer" parent="UI/ControlPanel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(172, 128)
+layout_mode = 2
+columns = 4

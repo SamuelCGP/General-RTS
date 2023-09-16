@@ -1,41 +1,44 @@
 extends Node3D
 
-@onready var camera = get_node("Camera3D")
-@onready var selector = get_node("Selector")
-@onready var pointTargetModel = preload("res://assets/models/pointTarget/pointTarget.tscn")
+@onready var main_menu = $UI/MainMenu
+@onready var address_entry = $UI/MainMenu/MarginContainer/VBoxContainer/Address
 
-func _ready():
-	var target = pointTargetModel.instantiate()
-	target.name = "pointTarget"
-	self.add_child(target)
+const Player = preload("res://scenes/player.tscn")
+const Unit = preload("res://scenes/unit.tscn")
+const PORT = 9999
+var enet_peer = ENetMultiplayerPeer.new()
 
-func _input(event):
-	var ray_origin = Vector3()
-	var ray_target = Vector3()
-
-	var mouse_position = get_viewport().get_mouse_position()
+func _on_host_button_pressed():
+	main_menu.hide()
 	
-	ray_origin = camera.project_ray_origin(mouse_position)
-	ray_target = ray_origin + camera.project_ray_normal(mouse_position) * 2000
+	enet_peer.create_server(PORT)
+	multiplayer.multiplayer_peer = enet_peer
+	multiplayer.peer_connected.connect(add_player)
+	multiplayer.peer_disconnected.connect(remove_player)
 	
-	var space_state = get_world_3d().direct_space_state
-	var intersection = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(ray_origin, ray_target))
-	
-	if not intersection.is_empty():
-		if event is InputEventMouseButton and event.pressed:
-			match event.button_index:
-				MOUSE_BUTTON_LEFT:
-					pass
-				MOUSE_BUTTON_RIGHT:
-					var pos = intersection.position
-					updatePointTarget(pos)
-					moveUnits(pos)
-					
-func updatePointTarget(pos: Vector3):
-	var pointTarget = get_node("pointTarget")
-	pointTarget.position = pos + Vector3(0,0.1,0)
-	pointTarget.play()
+	add_player(multiplayer.get_unique_id())
+	add_unit(Vector3(-5,0,-5))
+	add_unit(Vector3(5,0,5))
 
-func moveUnits(pos: Vector3):
-	for unit in selector.selected:
-		unit.move_toward_pos(pos)
+func _on_join_button_pressed():
+	main_menu.hide()
+	
+	enet_peer.create_client("localhost", PORT)
+	multiplayer.multiplayer_peer = enet_peer
+	multiplayer.server_disconnected.connect(handle_forced_disconnect)
+
+func add_player(peer_id):
+	var player = Player.instantiate()
+	player.name = str(peer_id)
+	add_child(player)
+
+func remove_player(peer_id):
+	get_node(str(peer_id)).queue_free()
+
+func handle_forced_disconnect():
+	main_menu.show()
+
+func add_unit(pos = Vector3(0,0,0)):
+	var unit = Unit.instantiate()
+	unit.translate(pos)
+	add_child(unit,true)

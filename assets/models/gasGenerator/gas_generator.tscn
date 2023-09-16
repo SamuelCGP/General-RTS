@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8ff8k1omwq2"]
+
+[ext_resource type="PackedScene" uid="uid://b56lnmpcnyw8k" path="res://assets/models/gasGenerator/gas_generator.glb" id="1_qsyog"]
+[ext_resource type="Script" path="res://assets/models/gasGenerator/gas_generator.gd" id="2_dsuxu"]
+
+[node name="gas_generator" instance=ExtResource("1_qsyog")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+script = ExtResource("2_dsuxu")

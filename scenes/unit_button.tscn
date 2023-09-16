@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://5e44e6361gg4"]
+
+[ext_resource type="Texture2D" uid="uid://dbeh5s8abvwgk" path="res://assets/textures/unit_icon.png" id="1_64knj"]
+[ext_resource type="Script" path="res://scripts/unit_button.gd" id="2_ep3ka"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4pj46"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.466667, 0.933333, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="Theme" id="Theme_2q0ks"]
+Button/styles/disabled = SubResource("StyleBoxFlat_4pj46")
+Button/styles/focus = SubResource("StyleBoxFlat_4pj46")
+Button/styles/hover = SubResource("StyleBoxFlat_4pj46")
+Button/styles/normal = SubResource("StyleBoxFlat_4pj46")
+Button/styles/pressed = SubResource("StyleBoxFlat_4pj46")
+
+[node name="UnitButton" type="Button"]
+offset_right = 36.0
+offset_bottom = 36.0
+theme = SubResource("Theme_2q0ks")
+action_mode = 0
+icon = ExtResource("1_64knj")
+script = ExtResource("2_ep3ka")

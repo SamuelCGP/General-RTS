@@ -1,32 +1,66 @@
+class_name Selector
 extends ColorRect
+
+signal new_selection
 
 var mouse_down = false
 var mouse_start_pos: Vector2
 var mouse_end_pos: Vector2
 
 @onready var camera: Camera3D = $"../Camera3D"
+@onready var control_panel = $"../UI/ControlPanel"
 
-var selected = []
+var selected = [] :
+	set(value):
+		if selected:
+			for selectable in selected:
+				selectable.deselect()
+
+		emit_signal("new_selection", value)
+		selected = value
+		
+		if not value: return
+		for selectable in value:
+			selectable.select()
+
+func _ready():
+	# set authority to the owner's name
+	set_multiplayer_authority(str(get_parent().name).to_int())
 
 func _input(event):
+	if not is_multiplayer_authority(): return
+	if control_panel.is_mouse_in == true: return
+	
+	if event is InputEventMouseMotion and mouse_down: _drawBox()
+	
 	if event is InputEventMouseButton:
 		if event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
-			if !mouse_down: 
+			if not mouse_down: 
 				mouse_down = true
 				mouse_start_pos = event.global_position
 			$".".global_position = mouse_start_pos
-		elif not event.is_pressed():
-			if mouse_down:
-				mouse_down = false
-				mouse_end_pos = event.global_position
-				if mouse_end_pos.distance_squared_to(mouse_start_pos) < 16:
-					selected = get_selectable_under_mouse()
-				else:
-					selected = get_selectables_in_box()
-				size = Vector2.ZERO
-	if event is InputEventMouseMotion:
-		if mouse_down:
-			_drawBox()
+		elif not event.is_pressed() and mouse_down:
+			mouse_down = false
+			size = Vector2.ZERO
+			mouse_end_pos = event.global_position
+			
+			var selection_area = abs(mouse_end_pos.x - mouse_start_pos.x)*abs(mouse_end_pos.y - mouse_start_pos.y)
+			var threshold = selection_area < 600
+			var new_selected = get_selectable_under_mouse() if threshold else get_selectables_in_box()
+				
+			if Input.is_action_pressed("shift"):
+				if selected and new_selected:
+					var tmp = selected
+					
+					for s in new_selected:
+						if selected.has(s):
+							new_selected.erase(s)
+					
+					tmp.append_array(new_selected)
+					selected = tmp # tmp foi criado só para ter essa atribuição, dando trigger no set()
+					return
+			
+			selected = new_selected
 
 func _drawBox():
 	var gmp = get_global_mouse_position()
@@ -43,12 +77,8 @@ func raycast_from_mouse(m_pos, collision_mask):
 	return space_state.intersect_ray(PhysicsRayQueryParameters3D.create(ray_start, ray_end, collision_mask, []))
 	
 func get_selectable_under_mouse():
-	var selectable_under_mouse = raycast_from_mouse(mouse_start_pos,1)
-	if selected:
-		for selectable in selected:
-			selectable.deselect()
+	var selectable_under_mouse = raycast_from_mouse(mouse_end_pos,1)
 	if selectable_under_mouse and selectable_under_mouse.collider.is_in_group("selectables"):
-		selectable_under_mouse.collider.select()
 		return [selectable_under_mouse.collider]
 
 func get_selectables_in_box():
@@ -69,7 +99,4 @@ func get_selectables_in_box():
 	for selectable in get_tree().get_nodes_in_group("selectables"):
 		if box.has_point(camera.unproject_position(selectable.global_transform.origin)): #TODO condição para times depois
 			box_selected.append(selectable)
-			selectable.select()
-		else:
-			selectable.deselect()
 	return box_selected
