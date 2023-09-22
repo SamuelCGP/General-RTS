@@ -7,6 +7,7 @@ var mouse_down = false
 var mouse_start_pos: Vector2
 var mouse_end_pos: Vector2
 
+@onready var player = $".."
 @onready var camera: Camera3D = $"../Camera3D"
 @onready var control_panel = $"../UI/ControlPanel"
 
@@ -30,6 +31,7 @@ func _ready():
 func _input(event):
 	if not is_multiplayer_authority(): return
 	if control_panel.is_mouse_in == true: return
+	if player.action != "select": return
 	
 	if event is InputEventMouseMotion and mouse_down: _drawBox()
 	

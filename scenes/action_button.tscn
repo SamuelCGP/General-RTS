@@ -1,8 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://ba17qy8tdblyq"]
+[gd_scene load_steps=4 format=3 uid="uid://ba17qy8tdblyq"]
 
 [ext_resource type="Texture2D" uid="uid://dmvop8oqauwsg" path="res://assets/textures/action_icon.png" id="1_dofkc"]
+[ext_resource type="Script" path="res://scripts/action_button.gd" id="2_1mmka"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_s3q0h"]
+font_size = 17
+outline_size = 1
 
 [node name="ActionButton" type="Button"]
 offset_right = 40.0
 offset_bottom = 40.0
 icon = ExtResource("1_dofkc")
+script = ExtResource("2_1mmka")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 36.0
+offset_bottom = 39.0
+label_settings = SubResource("LabelSettings_s3q0h")
+horizontal_alignment = 2
+vertical_alignment = 2

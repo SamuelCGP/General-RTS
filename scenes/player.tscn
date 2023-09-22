@@ -30,7 +30,6 @@ near = 60.0
 script = ExtResource("3_5r5pm")
 
 [node name="UI" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="ControlPanel" type="PanelContainer" parent="UI"]
 anchors_preset = 7
